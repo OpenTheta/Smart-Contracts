@@ -306,9 +306,28 @@ contract OpenThetaNFTMarket is ReentrancyGuard {
             idToMarketItem[itemId].seller, idToMarketItem[itemId].owner, idToMarketItem[itemId].category, 0, true);
     }
 
+    function createMarketCancelAdmin(address nftContract, uint256 itemId) public nonReentrant onlyAdmin {
+        require(idToMarketItem[itemId].isSold == false, "Item is already sold");
+
+        // Read data from mappings
+        uint256 tokenId = idToMarketItem[itemId].tokenId;
+
+        // set in marketItem
+        idToMarketItem[itemId].price = 0;
+        idToMarketItem[itemId].isSold = true;
+        idToMarketItem[itemId].owner = payable(idToMarketItem[itemId].seller);
+
+        IERC721(nftContract).transferFrom(address(this), idToMarketItem[itemId].seller, tokenId);
+
+        _itemsSold.increment();
+
+        // Through event
+        emit MarketItemSale(itemId, idToMarketItem[itemId].nftContract, idToMarketItem[itemId].tokenId,
+            idToMarketItem[itemId].seller, idToMarketItem[itemId].owner, idToMarketItem[itemId].category, 0, true);
+    }
+
     // For TNT20 token (WrapedTFuel)
-    function createMarketItemOfferTNT20(address nftContract, uint256 itemId, uint256 offerPrice)
-    public nonReentrant {
+    function createMarketItemOfferTNT20(address nftContract, uint256 itemId, uint256 offerPrice) public nonReentrant {
         require(idToMarketItem[itemId].isSold == false, "Item is already sold");
         require(idToMarketItem[itemId].nftContract == nftContract, "Not correct NFT address");
 
@@ -327,8 +346,7 @@ contract OpenThetaNFTMarket is ReentrancyGuard {
         emit OfferPlaced(itemId, nftContract, idToMarketItem[itemId].tokenId, idToMarketItem[itemId].seller, offerPrice, idToMarketItem[itemId].bidder, idToMarketItem[itemId].category, idToMarketItem[itemId].price);
     }
 
-    function acceptMarketItemOfferTNT20(address nftContract, uint256 itemId, uint256 price)
-    public payable nonReentrant {
+    function acceptMarketItemOfferTNT20(address nftContract, uint256 itemId, uint256 price) public payable nonReentrant {
         require(msg.sender == idToMarketItem[itemId].seller, "You have to be the seller to cancel");
         require(idToMarketItem[itemId].isSold == false, "Item is already sold");
 
@@ -339,7 +357,7 @@ contract OpenThetaNFTMarket is ReentrancyGuard {
 
         if (IERC20(WTFuel).allowance(bidder, address(this)) < idToMarketItem[itemId].highestOffer) {
             // delete offer, bidder has not enough TNT20 tokens
-            //        // set in marketItem
+            // set in marketItem
             idToMarketItem[itemId].highestOffer = 0;
             idToMarketItem[itemId].bidder = address(0x0);
             return;
