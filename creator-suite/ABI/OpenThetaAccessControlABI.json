@@ -101,6 +101,25 @@
   {
     "inputs": [
       {
+        "internalType": "string",
+        "name": "_role",
+        "type": "string"
+      }
+    ],
+    "name": "getBytes32Role",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes32",
         "name": "role",
         "type": "bytes32"
@@ -181,6 +200,24 @@
   {
     "inputs": [
       {
+        "internalType": "string",
+        "name": "_role",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "_account",
+        "type": "address"
+      }
+    ],
+    "name": "grantRoleString",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes32",
         "name": "role",
         "type": "bytes32"
@@ -254,14 +291,14 @@
   {
     "inputs": [
       {
-        "internalType": "bytes32",
+        "internalType": "string",
         "name": "_role",
-        "type": "bytes32"
+        "type": "string"
       },
       {
-        "internalType": "bytes32",
+        "internalType": "string",
         "name": "_adminRole",
-        "type": "bytes32"
+        "type": "string"
       }
     ],
     "name": "setRoleAdmin",

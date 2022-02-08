@@ -77,19 +77,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "creator",
-        "type": "address"
-      }
-    ],
-    "name": "addCreator",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "nftContract",
         "type": "address"
       }

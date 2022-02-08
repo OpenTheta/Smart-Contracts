@@ -270,11 +270,11 @@ contract OpenThetaNFTMarket is ReentrancyGuard {
         //        payable(sellerAddress).transfer(userPayout);
         //        payable(feeAddress).transfer(feePayout);
 
-        (bool success,) = payable(sellerAddress).call{value : userPayout}("");
-        require(success, "Transfer failed.");
+        (bool successSeller,) = payable(sellerAddress).call{value : userPayout}("");
+        require(successSeller, "Transfer to seller failed.");
 
-        (success,) = payable(feeAddress).call{value : feePayout}("");
-        require(success, "Transfer failed.");
+        (bool successOwner,) = payable(feeAddress).call{value : feePayout}("");
+        require(successOwner, "Transfer Fee failed.");
 
         MarketItem memory item = idToMarketItem[itemId];
 
