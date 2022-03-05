@@ -304,7 +304,7 @@ contract SimpleAuction {
         require(idToAuctionItem[itemId].startTimestamp < block.timestamp, "Auction not live");
         require(idToAuctionItem[itemId].endTimestamp > block.timestamp, "Auction ended");
         require(bid == msg.value, "Bid unequal value send");
-        require(bid > idToAuctionItem[itemId].minBid, "Bid smaller minBid");
+        require(bid >= idToAuctionItem[itemId].minBid, "Bid smaller minBid");
         require(bid > idToAuctionItem[itemId].highestBid, "Bid smaller highest Bid");
 
 
