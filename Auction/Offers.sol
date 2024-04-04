@@ -23,7 +23,7 @@ contract Offers is ReentrancyGuard {
     address public admin;
     address public feeAddress;
     address public OTMarketAddress = 0xbB5f35D40132A0478f6aa91e79962e9F752167EA;
-    uint256 public offerFeeTFuel;
+    uint256 private offerFeeTFuel;
 
     constructor() {
         admin = payable(msg.sender);
@@ -40,7 +40,7 @@ contract Offers is ReentrancyGuard {
 
 
     // Event called when new Offer placed
-    event OfferPlaced(address indexed nftContract, uint256 indexed tokenId, address userAddress, uint256 offer);
+    event OfferPlaced(address indexed nftContract, uint256 indexed tokenId, address indexed userAddress, uint256 offer);
 
     // Event called when an Offer is updated
     event OfferUpdated(address indexed nftContract, uint256 indexed tokenId, address indexed userAddress, uint256 offer);
@@ -143,12 +143,12 @@ contract Offers is ReentrancyGuard {
         MARKET.Creator memory creatorData = MARKET(OTMarketAddress).getCreatorFeeBasisPoints(nftContract);
         if (creatorData.creator != address(0x0)) {
             // if creator is set
-            creatorPayout = (offer / 10000) * creatorData.feeBasisPoints / 100;
+            creatorPayout = (offer / 10000) * creatorData.feeBasisPoints;
             (bool successCreator,) = payable(creatorData.creator).call{value : creatorPayout}("");
             require(successCreator, "Transfer failed.");
         }
         // OpenTheta Fee
-        uint256 feePayout = (offer / 10000) * MARKET(OTMarketAddress).getSalesFee() / 100;
+        uint256 feePayout = (offer / 10000) * MARKET(OTMarketAddress).getSalesFee();
         (bool successFee,) = payable(feeAddress).call{value : feePayout}("");
         require(successFee, "Transfer to seller failed.");
         // User Payout
